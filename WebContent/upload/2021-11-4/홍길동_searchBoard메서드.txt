@@ -1,0 +1,179 @@
+// board 테이블에서 검색한 내용을 가지고 페이징을 처리하는 메서드.
+	public List<BoardDTO> searchBoardList(
+		String field, String keyword, int page, int rowsize) {
+		
+		List<BoardDTO> list = new ArrayList<BoardDTO>();
+		
+		// 해당 페이지에서 시작 번호
+		int startNo = (page * rowsize) - (rowsize - 1); 
+		
+		// 해당 페이지에서 마지막 번호
+		int endNo = (page * rowsize);
+		
+		openConn();
+		
+		
+		if(field.equals("title")) {
+			
+			try {
+				sql = "select * from "
+						+ " (select row_number() "
+						+ " over(order by board_no desc) rnum, "
+						+ " b.* from board b where board_title like ?) "
+						+ " where rnum >= ? and rnum <= ?";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setString(1, "%"+keyword+"%");
+				
+				pstmt.setInt(2, startNo);
+				
+				pstmt.setInt(3, endNo);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					BoardDTO dto = new BoardDTO();
+					
+					dto.setBoard_no(rs.getInt("board_no"));
+					dto.setBoard_writer(rs.getString("board_writer"));
+					dto.setBoard_title(rs.getString("board_title"));
+					dto.setBoard_cont(rs.getString("board_cont"));
+					dto.setBoard_pwd(rs.getString("board_pwd"));
+					dto.setBoard_hit(rs.getInt("board_hit"));
+					dto.setBoard_date(rs.getString("board_date"));
+					dto.setBoard_redate(rs.getString("board_redate"));
+					
+					list.add(dto);
+				}
+				
+				rs.close(); pstmt.close(); con.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(field.equals("content")) {
+			try {
+				sql = "select * from "
+						+ " (select row_number() "
+						+ " over(order by board_no desc) rnum, "
+						+ " b.* from board b where board_cont like ?) "
+						+ " where rnum >= ? and rnum <= ?";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setString(1, "%"+keyword+"%");
+				
+				pstmt.setInt(2, startNo);
+				
+				pstmt.setInt(3, endNo);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					BoardDTO dto = new BoardDTO();
+					
+					dto.setBoard_no(rs.getInt("board_no"));
+					dto.setBoard_writer(rs.getString("board_writer"));
+					dto.setBoard_title(rs.getString("board_title"));
+					dto.setBoard_cont(rs.getString("board_cont"));
+					dto.setBoard_pwd(rs.getString("board_pwd"));
+					dto.setBoard_hit(rs.getInt("board_hit"));
+					dto.setBoard_date(rs.getString("board_date"));
+					dto.setBoard_redate(rs.getString("board_redate"));
+					
+					list.add(dto);
+				}
+				
+				rs.close(); pstmt.close(); con.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(field.equals("title_content")) {
+			try {
+				sql = "select * from "
+						+ " (select row_number() "
+						+ " over(order by board_no desc) rnum, "
+						+ " b.* from board b where board_title like ?"
+						+ " or board_cont like ?) "
+						+ " where rnum >= ? and rnum <= ?";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setString(1, "%"+keyword+"%");
+				
+				pstmt.setString(2, "%"+keyword+"%");
+				
+				pstmt.setInt(3, startNo);
+				
+				pstmt.setInt(4, endNo);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					BoardDTO dto = new BoardDTO();
+					
+					dto.setBoard_no(rs.getInt("board_no"));
+					dto.setBoard_writer(rs.getString("board_writer"));
+					dto.setBoard_title(rs.getString("board_title"));
+					dto.setBoard_cont(rs.getString("board_cont"));
+					dto.setBoard_pwd(rs.getString("board_pwd"));
+					dto.setBoard_hit(rs.getInt("board_hit"));
+					dto.setBoard_date(rs.getString("board_date"));
+					dto.setBoard_redate(rs.getString("board_redate"));
+					
+					list.add(dto);
+				}
+				
+				rs.close(); pstmt.close(); con.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			try {
+				sql = "select * from "
+						+ " (select row_number() "
+						+ " over(order by board_no desc) rnum, "
+						+ " b.* from board b where board_writer like ?) "
+						+ " where rnum >= ? and rnum <= ?";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				pstmt.setString(1, "%"+keyword+"%");
+				
+				pstmt.setInt(2, startNo);
+				
+				pstmt.setInt(3, endNo);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					BoardDTO dto = new BoardDTO();
+					
+					dto.setBoard_no(rs.getInt("board_no"));
+					dto.setBoard_writer(rs.getString("board_writer"));
+					dto.setBoard_title(rs.getString("board_title"));
+					dto.setBoard_cont(rs.getString("board_cont"));
+					dto.setBoard_pwd(rs.getString("board_pwd"));
+					dto.setBoard_hit(rs.getInt("board_hit"));
+					dto.setBoard_date(rs.getString("board_date"));
+					dto.setBoard_redate(rs.getString("board_redate"));
+					
+					list.add(dto);
+				}
+				
+				rs.close(); pstmt.close(); con.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+	}  // searchBoardList() 메서드 end
